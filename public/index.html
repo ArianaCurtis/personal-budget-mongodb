@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Budget</title>
+    <!-- This is an SEO Change -->
+    <meta name="title" content="Personal Budget">
+    <!-- This is an SEO Change -->
+    <meta name="description" content="A free personal budget management app">
+    <!-- This is an SEO Change -->
+    <meta name="keywords" content="app financial tracking budget">
+    <!-- This is an SEO Change -->
+    <meta name="language" content="English">
+    <link rel="stylesheet" type="text/css" href="reset.css">
+    <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+
+    <!-- This is an A11y Change -->
+<a href="#main" class="skip">Skip to content</a>
+
+    <!-- This is an Semantic HTML Change -->
+     <!-- These are an A11y Changes -->
+    <nav role="menubar">
+        <ul>
+            <li><a role="menuitem" href="/">Home</a></li>
+            <li><a role="menuitem" href="/about.html">About</a></li>
+            <li><a role="menuitem" href="/login.html">Login</a></li>
+            <li><a role="menuitem" href="https://google.com">Google</a></li>
+        </ul>
+    </nav>
+
+    <!-- This is an Semantic HTML Change -->
+    <header>
+        <div class="hero">
+            <!-- This is an A11y Change -->
+            <h1 role="heading" aria-level="1">Personal Budget</h1>
+            <h2>A personal-budget management app</h2>
+        </div>   
+    </header>
+
+    <main class="center" id="main">
+
+        <div class="page-area">
+            <!-- This is an Semantic HTML Change -->
+            <article>
+                <h1>Stay on track</h1>
+                <p>
+                    Do you know where you are spending your money? If you really stop to track it down,
+                    you would get surprised! Proper budget management depends on real data... and this
+                    app will help you with that!
+                </p>
+            </article>
+    <!-- This is an Semantic HTML Change -->
+            <article>
+                <h1>Alerts</h1>
+                <p>
+                    What if your clothing budget ended? You will get an alert. The goal is to never go over the budget.
+                </p>
+            </article>
+    <!-- This is an Semantic HTML Change -->
+            <article>
+                <h1>Results</h1>
+                <p>
+                    People who stick to a financial plan, budgeting every expense, get out of debt faster!
+                    Also, they to live happier lives... since they expend without guilt or fear... 
+                    because they know it is all good and accounted for.
+                </p>
+            </article>
+    <!-- This is an Semantic HTML Change -->
+            <article>
+                <h1>Free</h1>
+                <p>
+                    This app is free!!! And you are the only one holding your data!
+                </p>
+            </article>
+    <!-- This is an Semantic HTML Change -->
+            <article>
+                <h1>Stay on track</h1>
+                <p>
+                    Do you know where you are spending your money? If you really stop to track it down,
+                    you would get surprised! Proper budget management depends on real data... and this
+                    app will help you with that!
+                </p>
+            </article>
+    <!-- This is an Semantic HTML Change -->
+            <article>
+                <h1>Alerts</h1>
+                <p>
+                    What if your clothing budget ended? You will get an alert. The goal is to never go over the budget.
+                </p>
+            </article>
+    <!-- This is an Semantic HTML Change -->
+            <article>
+                <h1>Results</h1>
+                <p>
+                    People who stick to a financial plan, budgeting every expense, get out of debt faster!
+                    Also, they to live happier lives... since they expend without guilt or fear... 
+                    because they know it is all good and accounted for.
+                </p>
+            </article>
+
+            <article>
+                <h1>Chart</h1>
+                <p>
+                    <canvas id="myChart" width="400" height="400"></canvas>
+                </p>
+            </article>
+            <article>
+                <h1 id="D3">Chart 2</h1>
+
+            </article>
+
+        </div>
+
+    </main>
+    <!-- This is an Semantic HTML Change -->
+    <footer class="bottom">
+        <div class="center">
+            All rights reserved &copy; Fabio Nolasco
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js" integrity="sha256-9bKyYHG7WfRmaDNW3xG1OSYUz2lmWGkXmQxl1Irw3Lk=" crossorigin="anonymous"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.5/dist/chart.umd.min.js"></script>   
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script> 
+    <script>
+        async function getBudget() {
+            try {
+                const response = await fetch('http://localhost:3001/budget');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching chart data:', error);
+            }
+        }
+        
+        async function createChart() {
+            const chartData = await getBudget();
+            if (!chartData) {
+                return;
+            }
+
+            const labels = chartData.map(item => item.title);
+            const values = chartData.map(item => item.budget);
+            const colors = chartData.map(item => item.color);
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myPieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Monthly Budget',
+                        data: values,
+                        backgroundColor: colors
+                    }]
+                }
+            });
+        }
+        createChart();
+
+        async function createD3chart() {
+            const chartData = await getBudget();
+            if (!chartData) {
+                return;
+            }
+
+            var chart2 = document.getElementById('D3');
+
+            var width = 400,
+                height = 400,
+                radius = Math.min(width, height) / 2;
+
+            var color = d3.scaleOrdinal()
+            .domain(chartData.map(d => d.title))
+            .range(chartData.map(d => d.color));
+
+            var svg = d3.select(chart2)
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+            var pie = d3.pie()
+                .sort(null)
+                .value(function (d) {
+                    return d.budget;
+                });
+
+            var arc = d3.arc()
+                .outerRadius(radius * 0.9)
+                .innerRadius(radius * 0.4);
+
+            var outerArc = svg.selectAll("arc")
+                .data(pie(chartData))
+                .enter()
+                .append("g")
+                .attr("class", "arc");
+
+            outerArc.append("path")
+            .attr("d", arc)
+            .attr("fill", function (d) {
+                return color(d.data.title); 
+            });
+
+            outerArc.append("text")
+            .attr("transform", function (d) {
+                var pos = arc.centroid(d);
+                return "translate(" + pos + ")";
+            })
+            .attr("dy", ".35em")
+            .style("text-anchor", "middle")
+            .text(function (d) {
+                return d.data.title + ": " + d.data.budget;
+            });
+    }
+    
+    createD3chart();
+    </script>
+
+</body>
+</html>

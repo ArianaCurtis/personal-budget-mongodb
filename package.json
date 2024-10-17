@@ -1,0 +1,20 @@
+{
+  "name": "native_mongo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "chartjs": "^0.3.24",
+    "d3": "^7.9.0",
+    "express": "^4.21.1",
+    "mongo": "^0.1.0",
+    "mongodb": "^6.9.0",
+    "mongoose": "^8.7.1",
+    "mongosh": "^2.3.2"
+  }
+}
